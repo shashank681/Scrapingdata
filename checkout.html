@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - SnaQ Trail | Secure Payment & Fast Delivery</title>
+    <meta name="description" content="Complete your purchase with secure payment options including COD, UPI, and cards. Fast delivery across India.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'turmeric': '#F4A460',
+                        'spice-orange': '#FF8C42',
+                        'leafy-green': '#4A7C59',
+                        'off-white': '#FAF9F6',
+                        'warm-cream': '#FDF5E6',
+                        'deep-brown': '#8B4513'
+                    },
+                    fontFamily: {
+                        'display': ['Playfair Display', 'serif'],
+                        'body': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .btn-primary {
+            background: linear-gradient(135deg, #FF8C42 0%, #F4A460 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255,140,66,0.3);
+        }
+        .cart-counter {
+            animation: bounce 0.5s ease-in-out;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
+        .step-indicator.active {
+            background: linear-gradient(135deg, #FF8C42 0%, #F4A460 100%);
+            color: white;
+        }
+        .step-indicator.completed {
+            background: #4A7C59;
+            color: white;
+        }
+        .payment-method {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .payment-method:hover {
+            border-color: #FF8C42;
+        }
+        .payment-method.selected {
+            border-color: #FF8C42;
+            background-color: rgba(255, 140, 66, 0.05);
+        }
+        .form-input {
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            border-color: #FF8C42;
+            box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-off-white font-body">
+    <!-- Sticky Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <img src="resources/logo.png" alt="SnaQ Trail" class="h-10 w-auto">
+                    <span class="ml-2 text-xl font-display font-bold text-deep-brown">SnaQ Trail</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-600 hover:text-deep-brown transition-colors">Home</a>
+                    <a href="products.html" class="text-gray-600 hover:text-deep-brown transition-colors">Products</a>
+                    <a href="about.html" class="text-gray-600 hover:text-deep-brown transition-colors">About</a>
+                    <div class="relative">
+                        <button id="cart-btn" class="flex items-center space-x-2 bg-spice-orange text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h9m-9 0V19a2 2 0 002 2h7a2 2 0 002-2v-4"></path>
+                            </svg>
+                            <span>Cart</span>
+                            <span id="cart-count" class="bg-white text-spice-orange px-2 py-1 rounded-full text-xs font-bold">0</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-deep-brown">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-4 py-2 space-y-2">
+                <a href="index.html" class="block py-2 text-gray-600">Home</a>
+                <a href="products.html" class="block py-2 text-gray-600">Products</a>
+                <a href="about.html" class="block py-2 text-gray-600">About</a>
+                <button id="mobile-cart-btn" class="w-full flex items-center justify-between bg-spice-orange text-white px-4 py-2 rounded-lg mt-2">
+                    <span>Cart</span>
+                    <span id="mobile-cart-count" class="bg-white text-spice-orange px-2 py-1 rounded-full text-xs font-bold">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Checkout Header -->
+    <section class="pt-20 pb-8 bg-white border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl font-display font-bold text-deep-brown mb-4">
+                    Secure Checkout
+                </h1>
+                <p class="text-lg text-gray-600">
+                    Complete your order in just a few steps
+                </p>
+            </div>
+            
+            <!-- Progress Steps -->
+            <div class="mt-8 flex justify-center">
+                <div class="flex items-center space-x-4">
+                    <div class="step-indicator active w-10 h-10 rounded-full flex items-center justify-center font-semibold">1</div>
+                    <div class="w-12 h-1 bg-gray-200"></div>
+                    <div class="step-indicator w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center font-semibold text-gray-500">2</div>
+                    <div class="w-12 h-1 bg-gray-200"></div>
+                    <div class="step-indicator w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center font-semibold text-gray-500">3</div>
+                </div>
+            </div>
+            <div class="flex justify-center mt-2">
+                <div class="flex items-center space-x-8 text-sm text-gray-600">
+                    <span class="font-medium text-spice-orange">Cart</span>
+                    <span>Details</span>
+                    <span>Payment</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Content -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-3 gap-12">
+                <!-- Checkout Form -->
+                <div class="lg:col-span-2">
+                    <!-- Empty Cart State -->
+                    <div id="empty-cart" class="text-center py-16 hidden">
+                        <svg class="w-24 h-24 mx-auto text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h9m-9 0V19a2 2 0 002 2h7a2 2 0 002-2v-4"></path>
+                        </svg>
+                        <h3 class="text-2xl font-semibold text-gray-600 mb-4">Your cart is empty</h3>
+                        <p class="text-gray-500 mb-8">Add some delicious snacks to get started!</p>
+                        <a href="products.html" class="btn-primary text-white px-8 py-4 rounded-lg font-semibold text-lg">
+                            Browse Products
+                        </a>
+                    </div>
+                    
+                    <!-- Checkout Steps -->
+                    <div id="checkout-steps">
+                        <!-- Step 1: Cart Review -->
+                        <div id="step-1" class="checkout-step">
+                            <h2 class="text-2xl font-semibold text-deep-brown mb-6">Review Your Order</h2>
+                            <div id="cart-items-list" class="space-y-4 mb-8">
+                                <!-- Cart items will be rendered here -->
+                            </div>
+                            
+                            <!-- Delivery Options -->
+                            <div class="bg-white p-6 rounded-xl border border-gray-200 mb-8">
+                                <h3 class="text-lg font-semibold text-deep-brown mb-4">Delivery Options</h3>
+                                <div class="space-y-3">
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="radio" name="delivery" value="standard" checked class="text-spice-orange focus:ring-spice-orange">
+                                        <div>
+                                            <p class="font-medium">Standard Delivery</p>
+                                            <p class="text-sm text-gray-600">5-7 business days • Free on orders above ₹500</p>
+                                        </div>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="radio" name="delivery" value="express" class="text-spice-orange focus:ring-spice-orange">
+                                        <div>
+                                            <p class="font-medium">Express Delivery</p>
+                                            <p class="text-sm text-gray-600">2-3 business days • ₹49 extra</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <button id="continue-to-details" class="btn-primary text-white px-8 py-4 rounded-lg font-semibold text-lg w-full">
+                                Continue to Details
+                            </button>
+                        </div>
+                        
+                        <!-- Step 2: Shipping Details -->
+                        <div id="step-2" class="checkout-step hidden">
+                            <h2 class="text-2xl font-semibold text-deep-brown mb-6">Shipping Details</h2>
+                            <form id="shipping-form" class="space-y-6">
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                                        <input type="text" required class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                                        <input type="text" required class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                                    <input type="email" required class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                                    <input type="tel" required class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Address Line 1 *</label>
+                                    <input type="text" required class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Address Line 2</label>
+                                    <input type="text" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                </div>
+                                
+                                <div class="grid md:grid-cols-3 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">City *</label>
+                                        <input type="text" required class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">State *</label>
+                                        <select required class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                            <option value="">Select State</option>
+                                            <option value="maharashtra">Maharashtra</option>
+                                            <option value="delhi">Delhi</option>
+                                            <option value="karnataka">Karnataka</option>
+                                            <option value="tamil-nadu">Tamil Nadu</option>
+                                            <option value="gujarat">Gujarat</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">PIN Code *</label>
+                                        <input type="text" required class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" id="save-address" class="text-spice-orange focus:ring-spice-orange">
+                                    <label for="save-address" class="text-sm text-gray-700">Save this address for future orders</label>
+                                </div>
+                            </form>
+                            
+                            <div class="flex space-x-4 mt-8">
+                                <button id="back-to-cart" class="flex-1 border-2 border-gray-300 text-gray-700 px-6 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                                    Back to Cart
+                                </button>
+                                <button id="continue-to-payment" class="flex-1 btn-primary text-white px-6 py-4 rounded-lg font-semibold">
+                                    Continue to Payment
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: Payment -->
+                        <div id="step-3" class="checkout-step hidden">
+                            <h2 class="text-2xl font-semibold text-deep-brown mb-6">Payment Method</h2>
+                            
+                            <div class="space-y-4 mb-8">
+                                <div class="payment-method selected border-2 border-gray-200 rounded-lg p-4">
+                                    <div class="flex items-center space-x-3">
+                                        <input type="radio" name="payment" value="cod" checked class="text-spice-orange focus:ring-spice-orange">
+                                        <div class="flex-1">
+                                            <p class="font-medium">Cash on Delivery</p>
+                                            <p class="text-sm text-gray-600">Pay when you receive your order</p>
+                                        </div>
+                                        <svg class="w-6 h-6 text-spice-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-method border-2 border-gray-200 rounded-lg p-4">
+                                    <div class="flex items-center space-x-3">
+                                        <input type="radio" name="payment" value="upi" class="text-spice-orange focus:ring-spice-orange">
+                                        <div class="flex-1">
+                                            <p class="font-medium">UPI Payment</p>
+                                            <p class="text-sm text-gray-600">Pay using Google Pay, PhonePe, or any UPI app</p>
+                                        </div>
+                                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-method border-2 border-gray-200 rounded-lg p-4">
+                                    <div class="flex items-center space-x-3">
+                                        <input type="radio" name="payment" value="card" class="text-spice-orange focus:ring-spice-orange">
+                                        <div class="flex-1">
+                                            <p class="font-medium">Credit/Debit Card</p>
+                                            <p class="text-sm text-gray-600">Secure payment with 3D Secure</p>
+                                        </div>
+                                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Form (Hidden by default) -->
+                            <div id="payment-form" class="hidden bg-gray-50 p-6 rounded-lg mb-8">
+                                <!-- Card details form will be shown when card payment is selected -->
+                            </div>
+                            
+                            <div class="flex space-x-4">
+                                <button id="back-to-details" class="flex-1 border-2 border-gray-300 text-gray-700 px-6 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                                    Back to Details
+                                </button>
+                                <button id="place-order" class="flex-1 btn-primary text-white px-6 py-4 rounded-lg font-semibold">
+                                    Place Order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 sticky top-24">
+                        <h3 class="text-xl font-semibold text-deep-brown mb-6">Order Summary</h3>
+                        
+                        <div id="order-summary-items" class="space-y-4 mb-6">
+                            <!-- Order items will be rendered here -->
+                        </div>
+                        
+                        <div class="border-t border-gray-200 pt-4 space-y-3">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Subtotal</span>
+                                <span id="subtotal">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Shipping</span>
+                                <span id="shipping">Free</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600">
+                                <span>Tax</span>
+                                <span id="tax">₹0</span>
+                            </div>
+                            <div class="flex justify-between text-lg font-semibold text-deep-brown border-t border-gray-200 pt-3">
+                                <span>Total</span>
+                                <span id="total">₹0</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Trust Badges -->
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <div class="flex items-center justify-center space-x-4 text-sm text-gray-600">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4 text-leafy-green" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Secure Payment</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4 text-leafy-green" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>FSSAI Certified</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white p-8 rounded-2xl max-w-md mx-4 text-center">
+            <div class="w-16 h-16 mx-auto mb-6 bg-leafy-green rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-semibold text-deep-brown mb-4">Order Placed Successfully!</h3>
+            <p class="text-gray-600 mb-6">Thank you for your order. You will receive a confirmation email shortly.</p>
+            <div class="space-y-3">
+                <p class="text-sm text-gray-500">Order ID: <span id="order-id" class="font-mono">ORD-2025-001234</span></p>
+                <p class="text-sm text-gray-500">Estimated delivery: 5-7 business days</p>
+            </div>
+            <div class="flex space-x-3 mt-6">
+                <button onclick="closeSuccessModal()" class="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                    Continue Shopping
+                </button>
+                <button onclick="trackOrder()" class="flex-1 btn-primary text-white px-4 py-2 rounded-lg">
+                    Track Order
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        // Checkout page specific functionality
+        let currentStep = 1;
+        let shippingCost = 0;
+        let selectedPaymentMethod = 'cod';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCheckout();
+        });
+
+        function initializeCheckout() {
+            renderCartItems();
+            updateOrderSummary();
+            initializeStepNavigation();
+            initializePaymentMethods();
+            
+            // Show empty cart if no items
+            if (cart.items.length === 0) {
+                showEmptyCart();
+            }
+        }
+
+        function showEmptyCart() {
+            document.getElementById('empty-cart').classList.remove('hidden');
+            document.getElementById('checkout-steps').classList.add('hidden');
+        }
+
+        function renderCartItems() {
+            const cartItemsList = document.getElementById('cart-items-list');
+            const orderSummaryItems = document.getElementById('order-summary-items');
+            
+            if (cart.items.length === 0) {
+                cartItemsList.innerHTML = '<p class="text-gray-500 text-center py-8">Your cart is empty</p>';
+                orderSummaryItems.innerHTML = '<p class="text-gray-500 text-center py-8">No items in cart</p>';
+                return;
+            }
+            
+            const cartHTML = cart.items.map(item => `
+                <div class="flex items-center space-x-4 p-4 bg-white rounded-lg border border-gray-200">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg">
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-deep-brown">${item.name}</h4>
+                        <p class="text-sm text-gray-600">${item.weight}</p>
+                        <p class="text-lg font-semibold text-spice-orange">₹${item.price}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="updateItemQuantity(${item.id}, ${item.quantity - 1})" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-300">-</button>
+                        <span class="font-semibold w-8 text-center">${item.quantity}</span>
+                        <button onclick="updateItemQuantity(${item.id}, ${item.quantity + 1})" class="w-8 h-8 bg-spice-orange rounded-full flex items-center justify-center text-white hover:bg-opacity-80">+</button>
+                    </div>
+                    <button onclick="removeItemFromCart(${item.id})" class="text-red-500 hover:text-red-700 p-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            `).join('');
+            
+            const summaryHTML = cart.items.map(item => `
+                <div class="flex justify-between text-sm">
+                    <span>${item.name} × ${item.quantity}</span>
+                    <span>₹${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+            `).join('');
+            
+            cartItemsList.innerHTML = cartHTML;
+            orderSummaryItems.innerHTML = summaryHTML;
+        }
+
+        function updateItemQuantity(productId, newQuantity) {
+            if (newQuantity <= 0) {
+                removeItemFromCart(productId);
+            } else {
+                cart.updateQuantity(productId, newQuantity);
+                renderCartItems();
+                updateOrderSummary();
+            }
+        }
+
+        function removeItemFromCart(productId) {
+            cart.removeItem(productId);
+            renderCartItems();
+            updateOrderSummary();
+            
+            if (cart.items.length === 0) {
+                showEmptyCart();
+            }
+        }
+
+        function updateOrderSummary() {
+            const subtotal = cart.getTotal();
+            const tax = subtotal * 0.05; // 5% tax
+            const total = subtotal + tax + shippingCost;
+            
+            document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
+            document.getElementById('tax').textContent = `₹${tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `₹${total.toFixed(2)}`;
+            
+            // Update shipping based on delivery option
+            const deliveryOption = document.querySelector('input[name="delivery"]:checked');
+            if (deliveryOption) {
+                shippingCost = deliveryOption.value === 'express' ? 49 : 0;
+                document.getElementById('shipping').textContent = shippingCost === 0 ? 'Free' : `₹${shippingCost}`;
+            }
+        }
+
+        function initializeStepNavigation() {
+            // Step 1 to 2
+            document.getElementById('continue-to-details').addEventListener('click', () => {
+                goToStep(2);
+            });
+            
+            // Step 2 navigation
+            document.getElementById('back-to-cart').addEventListener('click', () => {
+                goToStep(1);
+            });
+            document.getElementById('continue-to-payment').addEventListener('click', () => {
+                if (validateShippingForm()) {
+                    goToStep(3);
+                }
+            });
+            
+            // Step 3 navigation
+            document.getElementById('back-to-details').addEventListener('click', () => {
+                goToStep(2);
+            });
+            document.getElementById('place-order').addEventListener('click', () => {
+                placeOrder();
+            });
+        }
+
+        function goToStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.checkout-step').forEach(stepEl => {
+                stepEl.classList.add('hidden');
+            });
+            
+            // Show current step
+            document.getElementById(`step-${step}`).classList.remove('hidden');
+            
+            // Update step indicators
+            document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+                indicator.classList.remove('active', 'completed');
+                if (index + 1 < step) {
+                    indicator.classList.add('completed');
+                } else if (index + 1 === step) {
+                    indicator.classList.add('active');
+                }
+            });
+            
+            currentStep = step;
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validateShippingForm() {
+            const form = document.getElementById('shipping-form');
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    field.classList.remove('border-red-500');
+                }
+            });
+            
+            if (!isValid) {
+                showToast('Please fill in all required fields', 'error');
+            }
+            
+            return isValid;
+        }
+
+        function initializePaymentMethods() {
+            const paymentMethods = document.querySelectorAll('input[name="payment"]');
+            const paymentForm = document.getElementById('payment-form');
+            
+            paymentMethods.forEach(method => {
+                method.addEventListener('change', (e) => {
+                    selectedPaymentMethod = e.target.value;
+                    
+                    // Update payment method styling
+                    document.querySelectorAll('.payment-method').forEach(pm => {
+                        pm.classList.remove('selected');
+                    });
+                    e.target.closest('.payment-method').classList.add('selected');
+                    
+                    // Show/hide payment form based on selection
+                    if (e.target.value === 'card') {
+                        paymentForm.classList.remove('hidden');
+                        paymentForm.innerHTML = `
+                            <h4 class="font-semibold text-deep-brown mb-4">Card Details</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Card Number</label>
+                                    <input type="text" placeholder="1234 5678 9012 3456" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+                                        <input type="text" placeholder="MM/YY" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">CVV</label>
+                                        <input type="text" placeholder="123" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Cardholder Name</label>
+                                    <input type="text" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        paymentForm.classList.add('hidden');
+                    }
+                });
+            });
+        }
+
+        function placeOrder() {
+            // Show loading state
+            const placeOrderBtn = document.getElementById('place-order');
+            const originalText = placeOrderBtn.textContent;
+            placeOrderBtn.textContent = 'Processing...';
+            placeOrderBtn.disabled = true;
+            
+            // Simulate order processing
+            setTimeout(() => {
+                // Generate order ID
+                const orderId = 'ORD-2025-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                document.getElementById('order-id').textContent = orderId;
+                
+                // Show success modal
+                document.getElementById('success-modal').classList.remove('hidden');
+                
+                // Clear cart
+                cart.items = [];
+                cart.saveCart();
+                cart.updateCartDisplay();
+                
+                // Reset button
+                placeOrderBtn.textContent = originalText;
+                placeOrderBtn.disabled = false;
+            }, 2000);
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+            window.location.href = 'products.html';
+        }
+
+        function trackOrder() {
+            // In a real app, this would redirect to order tracking page
+            showToast('Order tracking feature coming soon!', 'info');
+            closeSuccessModal();
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            const bgColor = type === 'error' ? 'bg-red-500' : type === 'info' ? 'bg-blue-500' : 'bg-leafy-green';
+            toast.className = `fixed top-20 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300`;
+            toast.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <span>${message}</span>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.remove('translate-x-full'), 100);
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
+        }
+
+        // Initialize cart functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cart functionality (reuse from main.js)
+            const cartBtn = document.getElementById('cart-btn');
+            const mobileCartBtn = document.getElementById('mobile-cart-btn');
+            const cartSidebar = document.getElementById('cart-sidebar');
+            const cartOverlay = document.getElementById('cart-overlay');
+            const closeCart = document.getElementById('close-cart');
+
+            function openCart() {
+                cartSidebar.classList.remove('translate-x-full');
+                cartOverlay.classList.remove('hidden');
+                cart.renderCartItems();
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeCartSidebar() {
+                cartSidebar.classList.add('translate-x-full');
+                cartOverlay.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+
+            if (cartBtn) cartBtn.addEventListener('click', openCart);
+            if (mobileCartBtn) mobileCartBtn.addEventListener('click', openCart);
+            if (closeCart) closeCart.addEventListener('click', closeCartSidebar);
+            if (cartOverlay) cartOverlay.addEventListener('click', closeCartSidebar);
+
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Delivery option change handler
+            document.querySelectorAll('input[name="delivery"]').forEach(radio => {
+                radio.addEventListener('change', updateOrderSummary);
+            });
+        });
+    </script>
+</body>
+</html>

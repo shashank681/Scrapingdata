@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnaQ Trail - Premium Indian Snacks | Traditional & Healthy</title>
+    <meta name="description" content="Discover authentic Indian snacks made with traditional recipes. Premium namkeen, makhana, millet snacks & more. No preservatives, no palm oil, 100% homemade style.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'turmeric': '#F4A460',
+                        'spice-orange': '#FF8C42',
+                        'leafy-green': '#4A7C59',
+                        'off-white': '#FAF9F6',
+                        'warm-cream': '#FDF5E6',
+                        'deep-brown': '#8B4513'
+                    },
+                    fontFamily: {
+                        'display': ['Playfair Display', 'serif'],
+                        'body': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-bg {
+            background: linear-gradient(135deg, #FAF9F6 0%, #FDF5E6 100%);
+        }
+        .trust-badge {
+            transition: all 0.3s ease;
+        }
+        .trust-badge:hover {
+            transform: translateY(-2px);
+        }
+        .product-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #FF8C42 0%, #F4A460 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255,140,66,0.3);
+        }
+        .cart-counter {
+            animation: bounce 0.5s ease-in-out;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .splide__arrow {
+            background: rgba(255,140,66,0.8) !important;
+            border: none !important;
+        }
+        .splide__pagination__page.is-active {
+            background: #FF8C42 !important;
+        }
+    </style>
+</head>
+<body class="bg-off-white font-body">
+    <!-- Sticky Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <img src="resources/logo.png" alt="SnaQ Trail" class="h-10 w-auto">
+                    <span class="ml-2 text-xl font-display font-bold text-deep-brown">SnaQ Trail</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-deep-brown font-medium">Home</a>
+                    <a href="products.html" class="text-gray-600 hover:text-deep-brown transition-colors">Products</a>
+                    <a href="about.html" class="text-gray-600 hover:text-deep-brown transition-colors">About</a>
+                    <div class="relative">
+                        <button id="cart-btn" class="flex items-center space-x-2 bg-spice-orange text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h9m-9 0V19a2 2 0 002 2h7a2 2 0 002-2v-4"></path>
+                            </svg>
+                            <span>Cart</span>
+                            <span id="cart-count" class="bg-white text-spice-orange px-2 py-1 rounded-full text-xs font-bold">0</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-deep-brown">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-4 py-2 space-y-2">
+                <a href="index.html" class="block py-2 text-deep-brown font-medium">Home</a>
+                <a href="products.html" class="block py-2 text-gray-600">Products</a>
+                <a href="about.html" class="block py-2 text-gray-600">About</a>
+                <button id="mobile-cart-btn" class="w-full flex items-center justify-between bg-spice-orange text-white px-4 py-2 rounded-lg mt-2">
+                    <span>Cart</span>
+                    <span id="mobile-cart-count" class="bg-white text-spice-orange px-2 py-1 rounded-full text-xs font-bold">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg pt-20 pb-12 min-h-screen flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Hero Content -->
+                <div class="text-center lg:text-left">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-deep-brown mb-6">
+                        <span id="typed-text"></span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">
+                        Discover the authentic taste of India with our premium collection of traditional snacks. 
+                        Made with love, crafted with care, and delivered fresh to your doorstep.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <button class="btn-primary text-white px-8 py-4 rounded-lg font-semibold text-lg">
+                            Shop Now
+                        </button>
+                        <button class="border-2 border-spice-orange text-spice-orange px-8 py-4 rounded-lg font-semibold text-lg hover:bg-spice-orange hover:text-white transition-colors">
+                            View Products
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Hero Image -->
+                <div class="relative">
+                    <div class="splide hero-carousel">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <li class="splide__slide">
+                                    <img src="resources/family-snacking.png" alt="Family enjoying SnaQ Trail snacks" class="w-full h-96 object-cover rounded-2xl shadow-2xl">
+                                </li>
+                                <li class="splide__slide">
+                                    <img src="resources/namkeen-assorted.png" alt="Traditional Indian namkeen mixture" class="w-full h-96 object-cover rounded-2xl shadow-2xl">
+                                </li>
+                                <li class="splide__slide">
+                                    <img src="resources/spices-ingredients.png" alt="Authentic Indian spices and ingredients" class="w-full h-96 object-cover rounded-2xl shadow-2xl">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Badges -->
+    <section class="py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                <div class="trust-badge text-center p-4">
+                    <div class="w-16 h-16 mx-auto mb-3 bg-turmeric rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-sm text-deep-brown">100% Homemade Style</h3>
+                </div>
+                
+                <div class="trust-badge text-center p-4">
+                    <div class="w-16 h-16 mx-auto mb-3 bg-leafy-green rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-sm text-deep-brown">No Preservatives</h3>
+                </div>
+                
+                <div class="trust-badge text-center p-4">
+                    <div class="w-16 h-16 mx-auto mb-3 bg-spice-orange rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 100 2h.01a1 1 0 100-2H10zm-4 1a1 1 0 011-1h.01a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 0a1 1 0 100 2h.01a1 1 0 100-2H9zm2 0a1 1 0 100 2h.01a1 1 0 100-2H11z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-sm text-deep-brown">No Palm Oil</h3>
+                </div>
+                
+                <div class="trust-badge text-center p-4">
+                    <div class="w-16 h-16 mx-auto mb-3 bg-turmeric rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-sm text-deep-brown">Premium Ingredients</h3>
+                </div>
+                
+                <div class="trust-badge text-center p-4">
+                    <div class="w-16 h-16 mx-auto mb-3 bg-leafy-green rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-sm text-deep-brown">Gluten-Free Options</h3>
+                </div>
+                
+                <div class="trust-badge text-center p-4">
+                    <div class="w-16 h-16 mx-auto mb-3 bg-spice-orange rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-sm text-deep-brown">FSSAI Certified</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="py-16 bg-warm-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-display font-bold text-deep-brown mb-4">
+                    Our Premium Collection
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Handcrafted with authentic Indian spices and traditional recipes, 
+                    our snacks bring the taste of home to your modern lifestyle.
+                </p>
+            </div>
+            
+            <!-- Category Filter -->
+            <div class="flex overflow-x-auto pb-4 mb-8 space-x-4">
+                <button class="category-filter active flex-shrink-0 px-6 py-3 rounded-full font-medium transition-colors bg-spice-orange text-white" data-category="all">
+                    All Products
+                </button>
+                <button class="category-filter flex-shrink-0 px-6 py-3 rounded-full font-medium transition-colors bg-white text-gray-600 hover:bg-spice-orange hover:text-white" data-category="namkeen">
+                    Namkeen
+                </button>
+                <button class="category-filter flex-shrink-0 px-6 py-3 rounded-full font-medium transition-colors bg-white text-gray-600 hover:bg-spice-orange hover:text-white" data-category="makhana">
+                    Makhana
+                </button>
+                <button class="category-filter flex-shrink-0 px-6 py-3 rounded-full font-medium transition-colors bg-white text-gray-600 hover:bg-spice-orange hover:text-white" data-category="millet">
+                    Millet Snacks
+                </button>
+                <button class="category-filter flex-shrink-0 px-6 py-3 rounded-full font-medium transition-colors bg-white text-gray-600 hover:bg-spice-orange hover:text-white" data-category="combo">
+                    Combo Packs
+                </button>
+            </div>
+            
+            <!-- Products Grid -->
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Products will be loaded here by JavaScript -->
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="products.html" class="btn-primary text-white px-8 py-4 rounded-lg font-semibold text-lg inline-block">
+                    View All Products
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Reviews -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-display font-bold text-deep-brown mb-4">
+                    Loved by Indian Families
+                </h2>
+                <p class="text-lg text-gray-600">
+                    Join thousands of satisfied customers who trust SnaQ Trail for their snacking needs.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-warm-cream p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-spice-orange">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-2 text-gray-600">5.0</span>
+                    </div>
+                    <p class="text-gray-700 mb-4">
+                        "The namkeen tastes exactly like my grandmother used to make! The quality is outstanding and the packaging keeps everything fresh. Highly recommend!"
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-turmeric rounded-full flex items-center justify-center text-white font-semibold">
+                            P
+                        </div>
+                        <div class="ml-3">
+                            <p class="font-semibold text-deep-brown">Priya Sharma</p>
+                            <p class="text-sm text-gray-500">Mumbai</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-warm-cream p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-spice-orange">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-2 text-gray-600">5.0</span>
+                    </div>
+                    <p class="text-gray-700 mb-4">
+                        "Perfect healthy snack option! The makhana is roasted perfectly and the flavors are amazing. Great for my evening cravings without the guilt."
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-spice-orange rounded-full flex items-center justify-center text-white font-semibold">
+                            R
+                        </div>
+                        <div class="ml-3">
+                            <p class="font-semibold text-deep-brown">Rohit Patel</p>
+                            <p class="text-sm text-gray-500">Delhi</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-warm-cream p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-spice-orange">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-2 text-gray-600">5.0</span>
+                    </div>
+                    <p class="text-gray-700 mb-4">
+                        "The gift pack was perfect for Diwali! Beautiful packaging and delicious snacks. My family loved every variety. Will definitely order again!"
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-leafy-green rounded-full flex items-center justify-center text-white font-semibold">
+                            A
+                        </div>
+                        <div class="ml-3">
+                            <p class="font-semibold text-deep-brown">Anita Desai</p>
+                            <p class="text-sm text-gray-500">Pune</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-16 bg-turmeric">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-white mb-4">
+                Stay Connected for Exclusive Offers
+            </h2>
+            <p class="text-xl text-white/90 mb-8">
+                Get the latest updates on new products, special discounts, and healthy snacking tips.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white focus:outline-none">
+                <button class="bg-deep-brown text-white px-8 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors">
+                    Subscribe
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-deep-brown text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <img src="resources/logo.png" alt="SnaQ Trail" class="h-10 w-auto filter brightness-0 invert">
+                        <span class="ml-2 text-xl font-display font-bold">SnaQ Trail</span>
+                    </div>
+                    <p class="text-white/80 mb-4 max-w-md">
+                        Bringing authentic Indian flavors to your modern lifestyle. 
+                        Premium snacks made with traditional recipes and the finest ingredients.
+                    </p>
+                    <div class="flex space-x-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                            <span class="text-sm font-bold">FSSAI</span>
+                        </div>
+                        <div class="text-sm text-white/80">
+                            License No: 12345678901234
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-white/80">
+                        <li><a href="products.html" class="hover:text-white transition-colors">All Products</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="about.html#contact" class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">FAQs</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Legal</h3>
+                    <ul class="space-y-2 text-white/80">
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms & Conditions</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Shipping Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Return Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
+                <p>&copy; 2025 SnaQ Trail. All rights reserved. Made with ❤️ in India.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed right-0 top-0 h-full w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-semibold text-deep-brown">Shopping Cart</h3>
+                <button id="close-cart" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6">
+            <p class="text-gray-500 text-center">Your cart is empty</p>
+        </div>
+        
+        <div id="cart-footer" class="p-6 border-t border-gray-200 hidden">
+            <div class="flex justify-between items-center mb-4">
+                <span class="font-semibold text-lg">Total:</span>
+                <span id="cart-total" class="font-bold text-xl text-spice-orange">₹0</span>
+            </div>
+            <a href="checkout.html" class="w-full btn-primary text-white py-3 rounded-lg font-semibold text-center block">
+                Proceed to Checkout
+            </a>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+    <script src="main.js"></script>
+</body>
+</html>

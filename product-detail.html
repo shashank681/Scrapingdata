@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - SnaQ Trail | Premium Indian Snacks</title>
+    <meta name="description" content="Detailed product information for our premium Indian snacks. Ingredients, nutrition facts, customer reviews and more.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'turmeric': '#F4A460',
+                        'spice-orange': '#FF8C42',
+                        'leafy-green': '#4A7C59',
+                        'off-white': '#FAF9F6',
+                        'warm-cream': '#FDF5E6',
+                        'deep-brown': '#8B4513'
+                    },
+                    fontFamily: {
+                        'display': ['Playfair Display', 'serif'],
+                        'body': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .btn-primary {
+            background: linear-gradient(135deg, #FF8C42 0%, #F4A460 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255,140,66,0.3);
+        }
+        .cart-counter {
+            animation: bounce 0.5s ease-in-out;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .quantity-btn {
+            transition: all 0.2s ease;
+        }
+        .quantity-btn:hover {
+            transform: scale(1.1);
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .accordion-content.active {
+            max-height: 500px;
+        }
+        .splide__arrow {
+            background: rgba(255,140,66,0.8) !important;
+            border: none !important;
+        }
+        .splide__pagination__page.is-active {
+            background: #FF8C42 !important;
+        }
+        .sticky-add-to-cart {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+    </style>
+</head>
+<body class="bg-off-white font-body">
+    <!-- Sticky Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <img src="resources/logo.png" alt="SnaQ Trail" class="h-10 w-auto">
+                    <span class="ml-2 text-xl font-display font-bold text-deep-brown">SnaQ Trail</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-600 hover:text-deep-brown transition-colors">Home</a>
+                    <a href="products.html" class="text-gray-600 hover:text-deep-brown transition-colors">Products</a>
+                    <a href="about.html" class="text-gray-600 hover:text-deep-brown transition-colors">About</a>
+                    <div class="relative">
+                        <button id="cart-btn" class="flex items-center space-x-2 bg-spice-orange text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6M7 13l-1.5 6m0 0h9m-9 0V19a2 2 0 002 2h7a2 2 0 002-2v-4"></path>
+                            </svg>
+                            <span>Cart</span>
+                            <span id="cart-count" class="bg-white text-spice-orange px-2 py-1 rounded-full text-xs font-bold">0</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-deep-brown">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-4 py-2 space-y-2">
+                <a href="index.html" class="block py-2 text-gray-600">Home</a>
+                <a href="products.html" class="block py-2 text-gray-600">Products</a>
+                <a href="about.html" class="block py-2 text-gray-600">About</a>
+                <button id="mobile-cart-btn" class="w-full flex items-center justify-between bg-spice-orange text-white px-4 py-2 rounded-lg mt-2">
+                    <span>Cart</span>
+                    <span id="mobile-cart-count" class="bg-white text-spice-orange px-2 py-1 rounded-full text-xs font-bold">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Product Detail Content -->
+    <div id="product-detail-container" class="pt-16">
+        <!-- Loading State -->
+        <div id="loading-state" class="py-20 text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-spice-orange mx-auto"></div>
+            <p class="mt-4 text-gray-600">Loading product details...</p>
+        </div>
+        
+        <!-- Error State -->
+        <div id="error-state" class="py-20 text-center hidden">
+            <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.562M15 6.5a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">Product Not Found</h3>
+            <p class="text-gray-500 mb-4">The product you're looking for doesn't exist.</p>
+            <a href="products.html" class="btn-primary text-white px-6 py-3 rounded-lg font-medium">
+                Browse Products
+            </a>
+        </div>
+    </div>
+
+    <!-- Sticky Add to Cart (Mobile) -->
+    <div id="sticky-cart" class="fixed bottom-0 left-0 right-0 sticky-add-to-cart border-t border-gray-200 p-4 z-40 hidden">
+        <div class="flex items-center justify-between max-w-md mx-auto">
+            <div>
+                <p class="text-sm text-gray-600">Price</p>
+                <p id="sticky-price" class="text-xl font-bold text-spice-orange">₹0</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-2">
+                    <button id="sticky-minus" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-300">-</button>
+                    <span id="sticky-quantity" class="font-semibold w-8 text-center">1</span>
+                    <button id="sticky-plus" class="w-8 h-8 bg-spice-orange rounded-full flex items-center justify-center text-white hover:bg-opacity-80">+</button>
+                </div>
+                <button id="sticky-add-cart" class="btn-primary text-white px-6 py-3 rounded-lg font-semibold">
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed right-0 top-0 h-full w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-semibold text-deep-brown">Shopping Cart</h3>
+                <button id="close-cart" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6">
+            <p class="text-gray-500 text-center">Your cart is empty</p>
+        </div>
+        
+        <div id="cart-footer" class="p-6 border-t border-gray-200 hidden">
+            <div class="flex justify-between items-center mb-4">
+                <span class="font-semibold text-lg">Total:</span>
+                <span id="cart-total" class="font-bold text-xl text-spice-orange">₹0</span>
+            </div>
+            <a href="checkout.html" class="w-full btn-primary text-white py-3 rounded-lg font-semibold text-center block">
+                Proceed to Checkout
+            </a>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+    <script src="main.js"></script>
+    <script>
+        // Product Detail Page Functionality
+        let currentProduct = null;
+        let quantity = 1;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeProductDetail();
+        });
+
+        function initializeProductDetail() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = parseInt(urlParams.get('id'));
+            
+            if (!productId) {
+                showErrorState();
+                return;
+            }
+            
+            currentProduct = products.find(p => p.id === productId);
+            
+            if (!currentProduct) {
+                showErrorState();
+                return;
+            }
+            
+            renderProductDetail();
+            initializeImageCarousel();
+            initializeAccordions();
+            initializeQuantityControls();
+            initializeStickyCart();
+        }
+
+        function renderProductDetail() {
+            const container = document.getElementById('product-detail-container');
+            const loadingState = document.getElementById('loading-state');
+            
+            // Hide loading state
+            loadingState.classList.add('hidden');
+            
+            container.innerHTML = `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="grid lg:grid-cols-2 gap-12">
+                        <!-- Product Images -->
+                        <div class="space-y-4">
+                            <div class="splide product-carousel">
+                                <div class="splide__track">
+                                    <ul class="splide__list">
+                                        <li class="splide__slide">
+                                            <img src="${currentProduct.image}" alt="${currentProduct.name}" class="w-full h-96 object-cover rounded-xl">
+                                        </li>
+                                        <li class="splide__slide">
+                                            <img src="resources/makhana-texture.png" alt="Product texture" class="w-full h-96 object-cover rounded-xl">
+                                        </li>
+                                        <li class="splide__slide">
+                                            <img src="resources/spices-ingredients.png" alt="Ingredients" class="w-full h-96 object-cover rounded-xl">
+                                        </li>
+                                        <li class="splide__slide">
+                                            <img src="resources/family-snacking.png" alt="Serving suggestion" class="w-full h-96 object-cover rounded-xl">
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product Information -->
+                        <div class="space-y-6">
+                            <div>
+                                <h1 class="text-3xl md:text-4xl font-display font-bold text-deep-brown mb-2">
+                                    ${currentProduct.name}
+                                </h1>
+                                <div class="flex items-center space-x-4 mb-4">
+                                    <div class="flex items-center">
+                                        <div class="flex text-yellow-400">
+                                            ${generateStars(currentProduct.rating)}
+                                        </div>
+                                        <span class="ml-2 text-gray-600">(${currentProduct.rating} rating)</span>
+                                    </div>
+                                    <span class="text-gray-400">|</span>
+                                    <span class="text-gray-600">${currentProduct.weight}</span>
+                                    ${currentProduct.inStock ? '<span class="text-leafy-green font-medium">✓ In Stock</span>' : '<span class="text-red-500 font-medium">Out of Stock</span>'}
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white p-6 rounded-xl shadow-sm">
+                                <div class="flex items-center justify-between mb-6">
+                                    <div>
+                                        <span class="text-3xl font-bold text-spice-orange">₹${currentProduct.price}</span>
+                                        <p class="text-sm text-gray-500 mt-1">Inclusive of all taxes</p>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-sm text-gray-600">Quantity:</span>
+                                        <div class="flex items-center space-x-2">
+                                            <button id="minus-btn" class="quantity-btn w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-300">-</button>
+                                            <span id="quantity-display" class="font-semibold text-lg w-8 text-center">1</span>
+                                            <button id="plus-btn" class="quantity-btn w-10 h-10 bg-spice-orange rounded-full flex items-center justify-center text-white hover:bg-opacity-80">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <button id="add-to-cart-btn" ${!currentProduct.inStock ? 'disabled' : ''} class="w-full btn-primary text-white py-4 rounded-lg font-semibold text-lg ${!currentProduct.inStock ? 'opacity-50 cursor-not-allowed' : ''}">
+                                        ${currentProduct.inStock ? 'Add to Cart' : 'Out of Stock'}
+                                    </button>
+                                    <button class="w-full border-2 border-spice-orange text-spice-orange py-4 rounded-lg font-semibold text-lg hover:bg-spice-orange hover:text-white transition-colors">
+                                        Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Trust Badges -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-white p-4 rounded-lg text-center">
+                                    <div class="w-12 h-12 mx-auto mb-2 bg-turmeric rounded-full flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm font-medium text-deep-brown">100% Homemade Style</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg text-center">
+                                    <div class="w-12 h-12 mx-auto mb-2 bg-leafy-green rounded-full flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm font-medium text-deep-brown">No Preservatives</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Details Accordion -->
+                    <div class="mt-16 space-y-4">
+                        <div class="bg-white rounded-xl overflow-hidden">
+                            <button class="accordion-btn w-full px-6 py-4 text-left font-semibold text-deep-brown flex justify-between items-center hover:bg-gray-50">
+                                <span>Product Description</span>
+                                <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="accordion-content px-6 pb-4">
+                                <p class="text-gray-700 leading-relaxed">${currentProduct.description}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl overflow-hidden">
+                            <button class="accordion-btn w-full px-6 py-4 text-left font-semibold text-deep-brown flex justify-between items-center hover:bg-gray-50">
+                                <span>Ingredients</span>
+                                <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="accordion-content px-6 pb-4">
+                                <p class="text-gray-700 leading-relaxed">${currentProduct.ingredients}</p>
+                                <p class="mt-3 text-sm text-gray-600">
+                                    <strong>Allergen Information:</strong> Made in a facility that processes nuts, wheat, and dairy products.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl overflow-hidden">
+                            <button class="accordion-btn w-full px-6 py-4 text-left font-semibold text-deep-brown flex justify-between items-center hover:bg-gray-50">
+                                <span>Nutrition Information</span>
+                                <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="accordion-content px-6 pb-4">
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 class="font-semibold text-deep-brown mb-3">Per 100g</h4>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <span>Energy</span>
+                                                <span>450 kcal</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>Protein</span>
+                                                <span>8g</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>Carbohydrates</span>
+                                                <span>45g</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>of which sugars</span>
+                                                <span>2g</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>Fat</span>
+                                                <span>28g</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>Fiber</span>
+                                                <span>3g</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>Sodium</span>
+                                                <span>800mg</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-deep-brown mb-3">Health Benefits</h4>
+                                        <ul class="text-sm text-gray-700 space-y-1">
+                                            <li>• High in protein and fiber</li>
+                                            <li>• No artificial preservatives</li>
+                                            <li>• Made with natural ingredients</li>
+                                            <li>• Perfect for healthy snacking</li>
+                                            <li>• Suitable for vegetarians</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl overflow-hidden">
+                            <button class="accordion-btn w-full px-6 py-4 text-left font-semibold text-deep-brown flex justify-between items-center hover:bg-gray-50">
+                                <span>Storage & Shelf Life</span>
+                                <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="accordion-content px-6 pb-4">
+                                <div class="space-y-3">
+                                    <div>
+                                        <h4 class="font-semibold text-deep-brown mb-2">Storage Instructions</h4>
+                                        <ul class="text-gray-700 space-y-1">
+                                            <li>• Store in a cool, dry place away from direct sunlight</li>
+                                            <li>• Keep in airtight container after opening</li>
+                                            <li>• Best consumed within 30 days of opening</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-deep-brown mb-2">Shelf Life</h4>
+                                        <p class="text-gray-700">6 months from the date of manufacturing when stored properly</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl overflow-hidden">
+                            <button class="accordion-btn w-full px-6 py-4 text-left font-semibold text-deep-brown flex justify-between items-center hover:bg-gray-50">
+                                <span>Customer Reviews</span>
+                                <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="accordion-content px-6 pb-4">
+                                <div class="space-y-4">
+                                    <div class="border-b border-gray-200 pb-4">
+                                        <div class="flex items-center mb-2">
+                                            <div class="flex text-yellow-400">
+                                                ${generateStars(5)}
+                                            </div>
+                                            <span class="ml-2 font-semibold">Delicious!</span>
+                                        </div>
+                                        <p class="text-gray-700 mb-2">"Amazing taste and perfect crunch. My family loves it!"</p>
+                                        <p class="text-sm text-gray-500">- Priya S., Mumbai</p>
+                                    </div>
+                                    <div class="border-b border-gray-200 pb-4">
+                                        <div class="flex items-center mb-2">
+                                            <div class="flex text-yellow-400">
+                                                ${generateStars(5)}
+                                            </div>
+                                            <span class="ml-2 font-semibold">Great quality</span>
+                                        </div>
+                                        <p class="text-gray-700 mb-2">"Fresh and flavorful. Will definitely buy again."</p>
+                                        <p class="text-sm text-gray-500">- Rohit P., Delhi</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showErrorState() {
+            const loadingState = document.getElementById('loading-state');
+            const errorState = document.getElementById('error-state');
+            
+            loadingState.classList.add('hidden');
+            errorState.classList.remove('hidden');
+        }
+
+        function initializeImageCarousel() {
+            const productCarousel = document.querySelector('.product-carousel');
+            if (productCarousel) {
+                new Splide(productCarousel, {
+                    type: 'fade',
+                    rewind: true,
+                    pagination: true,
+                    arrows: true,
+                    autoplay: false
+                }).mount();
+            }
+        }
+
+        function initializeAccordions() {
+            const accordionBtns = document.querySelectorAll('.accordion-btn');
+            
+            accordionBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const content = btn.nextElementSibling;
+                    const icon = btn.querySelector('svg');
+                    
+                    // Toggle current accordion
+                    content.classList.toggle('active');
+                    icon.classList.toggle('rotate-180');
+                    
+                    // Close other accordions
+                    accordionBtns.forEach(otherBtn => {
+                        if (otherBtn !== btn) {
+                            const otherContent = otherBtn.nextElementSibling;
+                            const otherIcon = otherBtn.querySelector('svg');
+                            otherContent.classList.remove('active');
+                            otherIcon.classList.remove('rotate-180');
+                        }
+                    });
+                });
+            });
+        }
+
+        function initializeQuantityControls() {
+            const minusBtn = document.getElementById('minus-btn');
+            const plusBtn = document.getElementById('plus-btn');
+            const quantityDisplay = document.getElementById('quantity-display');
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+            
+            minusBtn.addEventListener('click', () => {
+                if (quantity > 1) {
+                    quantity--;
+                    quantityDisplay.textContent = quantity;
+                    updateStickyCart();
+                }
+            });
+            
+            plusBtn.addEventListener('click', () => {
+                quantity++;
+                quantityDisplay.textContent = quantity;
+                updateStickyCart();
+            });
+            
+            addToCartBtn.addEventListener('click', () => {
+                if (currentProduct && currentProduct.inStock) {
+                    cart.addItem(currentProduct.id, quantity);
+                }
+            });
+        }
+
+        function initializeStickyCart() {
+            const stickyCart = document.getElementById('sticky-cart');
+            const stickyMinus = document.getElementById('sticky-minus');
+            const stickyPlus = document.getElementById('sticky-plus');
+            const stickyQuantity = document.getElementById('sticky-quantity');
+            const stickyPrice = document.getElementById('sticky-price');
+            const stickyAddCart = document.getElementById('sticky-add-cart');
+            
+            // Show sticky cart on mobile
+            if (window.innerWidth < 768) {
+                stickyCart.classList.remove('hidden');
+            }
+            
+            stickyMinus.addEventListener('click', () => {
+                if (quantity > 1) {
+                    quantity--;
+                    updateStickyCart();
+                }
+            });
+            
+            stickyPlus.addEventListener('click', () => {
+                quantity++;
+                updateStickyCart();
+            });
+            
+            stickyAddCart.addEventListener('click', () => {
+                if (currentProduct && currentProduct.inStock) {
+                    cart.addItem(currentProduct.id, quantity);
+                }
+            });
+            
+            updateStickyCart();
+        }
+
+        function updateStickyCart() {
+            const stickyQuantity = document.getElementById('sticky-quantity');
+            const stickyPrice = document.getElementById('sticky-price');
+            const quantityDisplay = document.getElementById('quantity-display');
+            
+            if (stickyQuantity) stickyQuantity.textContent = quantity;
+            if (quantityDisplay) quantityDisplay.textContent = quantity;
+            if (stickyPrice && currentProduct) {
+                stickyPrice.textContent = `₹${(currentProduct.price * quantity).toFixed(2)}`;
+            }
+        }
+
+        // Initialize cart functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cart functionality (reuse from main.js)
+            const cartBtn = document.getElementById('cart-btn');
+            const mobileCartBtn = document.getElementById('mobile-cart-btn');
+            const cartSidebar = document.getElementById('cart-sidebar');
+            const cartOverlay = document.getElementById('cart-overlay');
+            const closeCart = document.getElementById('close-cart');
+
+            function openCart() {
+                cartSidebar.classList.remove('translate-x-full');
+                cartOverlay.classList.remove('hidden');
+                cart.renderCartItems();
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeCartSidebar() {
+                cartSidebar.classList.add('translate-x-full');
+                cartOverlay.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+
+            if (cartBtn) cartBtn.addEventListener('click', openCart);
+            if (mobileCartBtn) mobileCartBtn.addEventListener('click', openCart);
+            if (closeCart) closeCart.addEventListener('click', closeCartSidebar);
+            if (cartOverlay) cartOverlay.addEventListener('click', closeCartSidebar);
+
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
